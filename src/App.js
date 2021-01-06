@@ -1,25 +1,33 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './App.css';
+import UserList from './UserList';
 
 function App() {
+  const [listOfUSer, setListOfUSer] = useState([]);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    axios.get('https://jsonplaceholder.typicode.com/users')
+      .then(res => setListOfUSer(res.data))
+      .catch(err => setError(err));
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+      <div className='title'><h1>FUGITIVE LIST</h1></div>
+      <div className="App-header">
+      {error? 
+      (<h2>YOU HAVE AN ERROR</h2>) 
+      : 
+      (listOfUSer.map(user => {
+        return(
+          <UserList key={user.id} user={user} />
+        )
+      }))}
+      
     </div>
+    </>
   );
+  
 }
 
 export default App;
